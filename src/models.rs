@@ -1,4 +1,6 @@
 use chrono::{DateTime, Utc};
+use failure::Error;
+use postgres::Connection;
 
 mod timestamp {
     use chrono::{DateTime, TimeZone, Utc};
@@ -22,6 +24,15 @@ mod timestamp {
         Utc.datetime_from_str(&s, FORMAT)
             .map_err(serde::de::Error::custom)
     }
+}
+
+trait CRUD {
+    fn create_table_if_not_exits(conn: Connection) -> Result<(), Error>;
+    fn insert_item(&self, conn: Connection) -> Result<(), Error>;
+    // TODO: make optional query params
+    fn create_query_string() -> Result<String, Error>;
+    fn update(&self, conn: Connection) -> Result<(), Error>;
+    fn delete(&self, conn: Connection) -> Result<(), Error>;
 }
 
 #[derive(Debug, Deserialize)]
@@ -58,6 +69,32 @@ struct BusPosition {
     vehicle_id: String,
 }
 
+impl CRUD for BusPositions {
+    fn create_table_if_not_exits(conn: Connection) -> Result<(), Error> {
+        conn.execute(
+            "CREATE TABLE BusPositions (
+            
+        )",
+            &[],
+        )?;
+        Ok(())
+    }
+    fn insert_item(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    // TODO: make optional query params
+    fn create_query_string() -> Result<String, Error> {
+        let ret = "".to_string();
+        Ok(ret)
+    }
+    fn update(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn delete(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Routes {
     #[serde(rename = "Routes")]
@@ -72,6 +109,26 @@ struct Route {
     name: String,
     #[serde(rename = "LineDescription")]
     line_description: String,
+}
+
+impl CRUD for Routes {
+    fn create_table_if_not_exits(conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn insert_item(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    // TODO: make optional query params
+    fn create_query_string() -> Result<String, Error> {
+        let ret = "".to_string();
+        Ok(ret)
+    }
+    fn update(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn delete(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -92,6 +149,26 @@ pub struct StationToStationInfo {
     rail_time: u32,
     #[serde(rename = "SourceStation")]
     source_station: String,
+}
+
+impl CRUD for StationToStationInfos {
+    fn create_table_if_not_exits(conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn insert_item(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    // TODO: make optional query params
+    fn create_query_string() -> Result<String, Error> {
+        let ret = "".to_string();
+        Ok(ret)
+    }
+    fn update(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn delete(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
 }
 
 #[derive(Debug, Deserialize)]
@@ -115,7 +192,7 @@ struct Schedule {
     #[serde(rename = "StartTime", with = "timestamp")]
     start_time: DateTime<Utc>,
     #[serde(rename = "StopTimes")]
-    stop_times: vec<StopTimes>,
+    stop_times: Vec<StopTimes>,
     #[serde(rename = "TripDirectionText")]
     trip_direction_text: String,
     #[serde(rename = "TripHeadsign")]
@@ -134,4 +211,24 @@ struct StopTimes {
     stop_seq: u32,
     #[serde(rename = "Time", with = "timestamp")]
     time: DateTime<Utc>,
+}
+
+impl CRUD for Schedule {
+    fn create_table_if_not_exits(conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn insert_item(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    // TODO: make optional query params
+    fn create_query_string() -> Result<String, Error> {
+        let ret = "".to_string();
+        Ok(ret)
+    }
+    fn update(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
+    fn delete(&self, conn: Connection) -> Result<(), Error> {
+        Ok(())
+    }
 }

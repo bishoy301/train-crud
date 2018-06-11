@@ -5,17 +5,21 @@ extern crate serde_json;
 extern crate serde_derive;
 extern crate chrono;
 extern crate failure;
+extern crate postgres;
 
 use failure::Error;
+use postgres::{Connection, SslMode};
 use reqwest::header;
 use std::fs::File;
 use std::io::prelude::*;
 
 mod api;
+mod dao;
 mod models;
 
 fn main() -> Result<(), Error> {
     let api = api::API::new("apiKeys.json")?;
+    let dao = dao::DAO::new("db.json");
 
     const BUS_POSITIONS_URL: &str = "https://api.wmata.com/Bus.svc/json/jBusPositions";
     const ROUTES_URL: &str = "https://api.wmata.com/Bus.svc/json/jRoutes";
@@ -26,16 +30,16 @@ fn main() -> Result<(), Error> {
     // find prices - hard code for now, requires html parsing of shady sites
     // find timings for distaces (position, schedule)
     // 1km radius per bus stop/ metro station
-    let bus_json = &api.get_json(BUS_POSITIONS_URL)?;
-    let bus_positions: models::BusPositions = serde_json::from_str(bus_json)?;
+    // let bus_json = &api.get_json(BUS_POSITIONS_URL)?;
+    // let bus_positions: models::BusPositions = serde_json::from_str(bus_json)?;
 
-    println!("{:#?}", bus_positions);
-    let routes: models::Routes = serde_json::from_str(&api.get_json(ROUTES_URL)?)?;
-    println!("{:#?}", routes);
+    // println!("{:#?}", bus_positions);
+    // let routes: models::Routes = serde_json::from_str(&api.get_json(ROUTES_URL)?)?;
+    // println!("{:#?}", routes);
 
-    let stations: models::StationToStationInfos =
-        serde_json::from_str(&api.get_json(STATIONS_URL)?)?;
-    println!("{:#?}", stations);
+    // let stations: models::StationToStationInfos =
+    //     serde_json::from_str(&api.get_json(STATIONS_URL)?)?;
+    // println!("{:#?}", stations);
 
     Ok(())
 }
